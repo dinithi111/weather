@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        /* Basic styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+.button-container {
+    margin-bottom: 20px;
+}
+
+.city-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.city-btn:hover {
+    background-color: #45a049;
+}
+
+.weather-info {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.weather-info h2 {
+    font-size: 24px;
+}
+
+.weather-info p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Information</h1>
+        
+        <div class="button-container">
+            <button class="city-btn" onclick="getWeather('New York')">New York</button>
+            <button class="city-btn" onclick="getWeather('London')">London</button>
+            <button class="city-btn" onclick="getWeather('Tokyo')">Tokyo</button>
+            <button class="city-btn" onclick="getWeather('Colombo')">Colombo</button>
+            <button class="city-btn" onclick="getWeather('Dubai')">Dubai</button>
+        </div>
+        
+        <div id="weather-info" class="weather-info">
+            <!-- Weather details will be dynamically displayed here -->
+        </div>
+    </div>
+
+    <script>
+        // Replace 'your_api_key' with your actual OpenWeatherMap API key
+const apiKey = '68e2a23cc2540a2565227b7e4ca58e6c';  // Add your API key here
+const units = 'metric'; // Celsius temperature
+
+// Function to fetch weather data for a city
+async function getWeather(city) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${apiKey}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.cod === 200) {
+            // Parse and display the weather data
+            const weatherInfo = `
+                <h2>Weather in ${data.name}, ${data.sys.country}</h2>
+                <p><strong>Temperature:</strong> ${data.main.temp}°C</p>
+                <p><strong>Description:</strong> ${data.weather[0].description}</p>
+                <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
+            `;
+            document.getElementById('weather-info').innerHTML = weatherInfo;
+            document.getElementById('weather-info').style.display = 'block';
+        } else {
+            document.getElementById('weather-info').innerHTML = `<p>Error: ${data.message}</p>`;
+            document.getElementById('weather-info').style.display = 'block';
+        }
+    } catch (error) {
+        document.getElementById('weather-info').innerHTML = `<p>Error fetching data: ${error}</p>`;
+        document.getElementById('weather-info').style.display = 'block';
+    }
+}
+
+    </script>
+</body>
+</html>
